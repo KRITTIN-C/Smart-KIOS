@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .welcome-page {
+            width: 100%;
+            height: 100%;
+            background-image: url('welcome_image.jpg');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-page {
+            width: 100%;
+            height: 100%;
+            background-color: #f0f0f0;
+            /* Example background color */
+        }
+
+        .hidden {
+            display: none;
+        }  
+    </style>
+</head>
+
+<body>
+    <div class="welcome-page">
+        <img src="welcome_image.jpg" alt="Welcome Image" id="welcome-image" onclick="redirectToLogin()">
+    </div>
+
+    <div class="login-page hidden">
+        <p>srggsdg</p>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function redirectToLogin() {
+            const welcomePage = document.querySelector('.welcome-page');
+            const loginPage = document.querySelector('.login-page');
+
+            welcomePage.style.display = 'none'; // ซ่อนหน้า welcome
+            loginPage.style.display = 'block'; // แสดงหน้า login
+        }
+    </script>
+</body>
+
+</html>
