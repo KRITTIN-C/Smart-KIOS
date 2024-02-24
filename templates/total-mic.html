@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: Verdana, sans-serif;
+            margin: 0;
+
+        }
+
+        .component {
+            position: relative;
+            width: 100%;
+            /* ปรับขนาดตามขนาดจอ */
+            height: 100vh;
+            /* ปรับขนาดตามขนาดจอ */
+            background-image: url('https://plus.unsplash.com/premium_photo-1675686363460-25aa1039e94b?q=80&w=2043&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            /* เปลี่ยนเป็น URL ของภาพที่คุณต้องการใช้ */
+            background-size: cover;
+            /* ปรับขนาดของภาพให้เต็มพื้นที่ */
+            background-position: center;
+            /* ตำแหน่งภาพให้อยู่ตรงกลาง */
+            /* filter: blur(1px); */
+            /* ทำให้ภาพเบลอ */
+            /* background-color: rgba(255, 255, 255, 0.5); */
+            /* สีพื้นหลังที่มองเห็นผ่านพื้นหลังเบลอ */
+            /* z-index:auto; */
+            /* ให้พื้นหลังเบลออยู่หน้าสุด */
+        }
+
+        .mySlides {
+            display: none;
+            /* filter: none; */
+        }
+
+        img {
+            vertical-align: middle;
+            margin-top: 5%;
+            margin-left: 25%;
+            /* filter: none; */
+        }
+
+        /* Slideshow container */
+        .slideshow-container {
+            /* margin-top: 30px; */
+            width: 100%;
+            height: 90vh;
+            /* max-width: 1000px; */
+            position: relative;
+            /* margin: auto; */
+            /* filter: none; */
+        }
+
+
+        .grid-container {
+            display: grid;
+            place-items: center;
+            height: 87vh;
+            /* ตั้งค่าความสูงเท่ากับความสูงของหน้าจอ */
+            /* margin-top: 70px;
+            margin-bottom: 70px; */
+        }
+
+        .grid-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 50px;
+            place-items: center;
+        }
+
+        .answer {
+            padding: 50px;
+            font-size: 30px;
+            font-weight: 100;
+            color: rgba(93, 92, 92, 0.801);
+            width: 500px;
+            border: 3px solid rgba(93, 92, 92, 0.801);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.782);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .answer:hover {
+            background-color: rgba(93, 92, 92, 0.801);
+            color: #fff;
+        }
+
+        .answer.selected {
+            background-color: rgb(172, 245, 249);
+            color: #fff;
+            border-color: rgba(144, 147, 147, 0.811);
+        }
+
+        /* Next & previous buttons */
+        .prev,
+        .next {
+            cursor: pointer;
+            position: absolute;
+            /* height: 100%; */
+            top: 50%;
+            /* height: 100%; */
+            width: 5%;
+            padding: 80px 5%;
+            margin-top: -22px;
+            color: white;
+            font-weight: bold;
+            font-size: 50px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            /* filter: none; */
+        }
+
+        /* Position the "next button" to the right */
+        .next {
+            /* top: 50%; */
+            right: 0;
+            border-radius: 3px 0 0 3px;
+            /* filter: none; */
+        }
+
+        /* On hover, add a black background color with a little bit see-through */
+        .prev:hover,
+        .next:hover {
+            background-color: rgba(74, 71, 71, 0.8);
+            /* filter: none; */
+        }
+
+        /* Caption text */
+        .text {
+            color: black;
+            background-color: rgba(252, 250, 250, 0.345);
+            font-size: 55px;
+            padding: 19px 12px;
+
+            right: 50%;
+            height: 10%;
+
+            /* bottom: 85%; */
+            width: auto;
+            /* text-align: center; */
+            border-radius: 10px;
+            /* filter: none; */
+        }
+
+        /* Number text (1/3 etc) */
+        .numbertext {
+            color: #f2f2f2;
+            font-size: 35px;
+            padding: 8px 12px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            /* filter: none; */
+        }
+
+        /* The dots/bullets/indicators */
+        .dot {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            line-height: 25px;
+            border-radius: 50%;
+            border: 1px solid whitesmoke;
+            background-color: #6f6f6f;
+            text-align: center;
+            /* font-size: 12px; */
+            margin: 0 6px;
+            cursor: pointer;
+            transition: background-color 0.6s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .active,
+        .dot:hover {
+            background-color: #fced65;
+            /* filter: none; */
+        }
+
+        /* Fading animation */
+        .fade {
+            animation-name: fade;
+            animation-duration: 1.5s;
+        }
+
+        .slide-in {
+            animation-name: slide-in;
+            animation-duration: 2s;
+            animation-direction: alternate;
+            /* กำหนดทิศทางการเล่น animation เป็น alternate */
+        }
+
+        @keyframes fade {
+            from {
+                opacity: .4
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes slide-in {
+            from {
+                transform: translateX(-100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+
+
+        /* On smaller screens, decrease text size */
+        @media only screen and (max-width: 480px) {
+
+            .prev,
+            .next {
+                cursor: pointer;
+                position: absolute;
+                /* height: 100%; */
+                top: 50%;
+                /* height: 100%; */
+                width: 5%;
+                padding: 30px 5%;
+                margin-top: -22px;
+                color: white;
+                font-weight: bold;
+                font-size: 40px;
+                transition: 0.6s ease;
+                border-radius: 0 3px 3px 0;
+                user-select: none;
+            }
+
+            .next {
+                /* top: 50%; */
+                right: 0;
+                border-radius: 3px 0 0 3px;
+                /* filter: none; */
+            }
+
+            .text {
+                position: absolute;
+                /* width: 80%; */
+                /* ปรับขนาดของ text */
+                top: 12%;
+                left: 8%;
+                width: 80%;
+                height: auto;
+                padding: 5px;
+                /* ย้าย text มาอยู่ตรงกลาง */
+                /* bottom: 10%; */
+                /* ย้าย text มาอยู่ตรงกลาง */
+                font-size: 22px;
+                align-items: center;
+                text-align: center;
+                /* ปรับให้ text มาอยู่ตรงกลาง */
+                /* filter: none; */
+            }
+
+            .grid-row {
+                margin-top: 12%;
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                grid-gap: 50px;
+                grid-row-gap: 5%;
+                align-items: center;
+                justify-content: center;
+                place-items: center;
+            }
+
+            .answer {
+                padding: 12px;
+                font-size: 18px;
+                width: 80%;
+                color: rgba(93, 92, 92, 0.801);
+                /* ปรับขนาดเพื่อให้ answer มีขนาดที่เหมาะสมกับหน้าจอ */
+                border: 2px solid rgba(93, 92, 92, 0.801);
+                border-radius: 8px;
+                background-color: rgba(255, 255, 255, 0.782);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .dot {
+                display: inline-block;
+                width: 22px;
+                height: 22px;
+                line-height: 25px;
+                border-radius: 50%;
+                border: 1px solid whitesmoke;
+                background-color: #6f6f6f;
+                text-align: center;
+                /* font-size: 12px; */
+                margin: 0 1px;
+                cursor: pointer;
+                transition: background-color 0.6s ease;
+                position: relative;
+                z-index: 1;
+            }
+
+        }
+
+        @media (min-width: 481px) and (max-width: 767px) {
+
+            .prev,
+            .next {
+                cursor: pointer;
+                position: absolute;
+                /* height: 100%; */
+                top: 50%;
+                /* height: 100%; */
+                width: 5%;
+                padding: 30px 5%;
+                margin-top: -22px;
+                color: white;
+                font-weight: bold;
+                font-size: 40px;
+                transition: 0.6s ease;
+                border-radius: 0 3px 3px 0;
+                user-select: none;
+            }
+
+            .next {
+                /* top: 50%; */
+                right: 0;
+                border-radius: 3px 0 0 3px;
+                /* filter: none; */
+            }
+
+            .text {
+                position: absolute;
+                /* width: 80%; */
+                /* ปรับขนาดของ text */
+                top: 12%;
+                left: 8%;
+                width: 80%;
+                height: auto;
+                padding: 5px;
+                /* ย้าย text มาอยู่ตรงกลาง */
+                /* bottom: 10%; */
+                /* ย้าย text มาอยู่ตรงกลาง */
+                font-size: 26px;
+                align-items: center;
+                text-align: center;
+                /* ปรับให้ text มาอยู่ตรงกลาง */
+                /* filter: none; */
+            }
+
+            .grid-row {
+                margin-top: 12%;
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                grid-gap: 50px;
+                grid-row-gap: 5%;
+                align-items: center;
+                justify-content: center;
+                place-items: center;
+            }
+
+            .answer {
+                padding: 13px;
+                font-size: 20px;
+                width: 90%;
+                color: rgba(93, 92, 92, 0.801);
+                /* ปรับขนาดเพื่อให้ answer มีขนาดที่เหมาะสมกับหน้าจอ */
+                border: 2px solid rgba(93, 92, 92, 0.801);
+                border-radius: 8px;
+                background-color: rgba(255, 255, 255, 0.782);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .dot {
+                display: inline-block;
+                width: 24px;
+                height: 24px;
+                line-height: 25px;
+                border-radius: 50%;
+                border: 1px solid whitesmoke;
+                background-color: #6f6f6f;
+                text-align: center;
+                /* font-size: 12px; */
+                margin: 0 2px;
+                cursor: pointer;
+                transition: background-color 0.6s ease;
+                position: relative;
+                z-index: 1;
+            }
+        }
+
+        /* Media Query for Tablets Ipads portrait mode */
+        @media (min-width: 768px) and (max-width: 1024px) {
+
+            .prev,
+            .next {
+                cursor: pointer;
+                position: absolute;
+                /* height: 100%; */
+                top: 50%;
+                /* height: 100%; */
+                width: 5%;
+                padding: 30px 5%;
+                margin-top: -22px;
+                color: white;
+                font-weight: bold;
+                font-size: 40px;
+                transition: 0.6s ease;
+                border-radius: 0 3px 3px 0;
+                user-select: none;
+            }
+
+            .next {
+                /* top: 50%; */
+                right: 0;
+                border-radius: 3px 0 0 3px;
+                /* filter: none; */
+            }
+
+            .text {
+                position: absolute;
+                /* width: 80%; */
+                /* ปรับขนาดของ text */
+                top: 18%;
+                left: 8%;
+                width: 80%;
+                height: auto;
+                padding: 5px;
+                /* ย้าย text มาอยู่ตรงกลาง */
+                /* bottom: 10%; */
+                /* ย้าย text มาอยู่ตรงกลาง */
+                font-size: 30px;
+                align-items: center;
+                text-align: center;
+                /* ปรับให้ text มาอยู่ตรงกลาง */
+                /* filter: none; */
+            }
+
+            .grid-row {
+                margin-top: 12%;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                grid-gap: 0;
+                grid-row-gap: 5%;
+                align-items: center;
+                justify-content: center;
+                place-items: center;
+            }
+
+            .answer {
+                padding: 23px;
+                font-size: 24px;
+                width: 80%;
+                color: rgba(93, 92, 92, 0.801);
+                /* ปรับขนาดเพื่อให้ answer มีขนาดที่เหมาะสมกับหน้าจอ */
+                border: 2px solid rgba(93, 92, 92, 0.801);
+                border-radius: 8px;
+                background-color: rgba(255, 255, 255, 0.782);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .dot {
+                display: inline-block;
+                width: 26px;
+                height: 26px;
+                line-height: 25px;
+                border-radius: 50%;
+                border: 1px solid whitesmoke;
+                background-color: #6f6f6f;
+                text-align: center;
+                /* font-size: 12px; */
+                margin: 0 3px;
+                cursor: pointer;
+                transition: background-color 0.6s ease;
+                position: relative;
+                z-index: 1;
+            }
+
+            .grid-container {
+                display: grid;
+                place-items: center;
+                height: 87vh;
+                /* ตั้งค่าความสูงเท่ากับความสูงของหน้าจอ */
+                /* margin-top: 70px;
+            margin-bottom: 70px; */
+            }
+        }
+
+        /* Media Query for Laptops and Desktops */
+        @media (min-width: 1025px) and (max-width: 1280px) {
+
+            .prev,
+            .next {
+                cursor: pointer;
+                position: absolute;
+                /* height: 100%; */
+                top: 50%;
+                /* height: 100%; */
+                width: 5%;
+                padding: 30px 5%;
+                margin-top: -22px;
+                color: white;
+                font-weight: bold;
+                font-size: 40px;
+                transition: 0.6s ease;
+                border-radius: 0 3px 3px 0;
+                user-select: none;
+            }
+
+            .next {
+                /* top: 50%; */
+                right: 0;
+                border-radius: 3px 0 0 3px;
+                /* filter: none; */
+            }
+
+            .text {
+                position: absolute;
+                /* width: 80%; */
+                /* ปรับขนาดของ text */
+                top: 18%;
+                left: 8%;
+                width: 80%;
+                height: auto;
+                padding: 5px;
+                /* ย้าย text มาอยู่ตรงกลาง */
+                /* bottom: 10%; */
+                /* ย้าย text มาอยู่ตรงกลาง */
+                font-size: 34px;
+                align-items: center;
+                text-align: center;
+                /* ปรับให้ text มาอยู่ตรงกลาง */
+                /* filter: none; */
+            }
+
+            .grid-row {
+                margin-top: 12%;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                grid-gap: 50px;
+                grid-row-gap: 5%;
+                align-items: center;
+                justify-content: center;
+                place-items: center;
+            }
+
+            .dot {
+                display: inline-block;
+                width: 30px;
+                height: 30px;
+                line-height: 25px;
+                border-radius: 50%;
+                border: 1px solid whitesmoke;
+                background-color: #6f6f6f;
+                text-align: center;
+                /* font-size: 12px; */
+                margin: 0 5px;
+                cursor: pointer;
+                transition: background-color 0.6s ease;
+                position: relative;
+                z-index: 1;
+            }
+
+            .answer {
+                padding: 25px;
+                font-size: 26px;
+                font-weight: 100;
+                color: rgba(93, 92, 92, 0.801);
+                width: 300px;
+                border: 3px solid rgba(93, 92, 92, 0.801);
+                border-radius: 8px;
+                background-color: rgba(255, 255, 255, 0.782);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+        }
+
+        /* Media Query for Large screens */
+        /* @media (min-width: 1281px) and (max-width: 1440px) {
+
+            .prev,
+            .next {
+                cursor: pointer;
+                position: absolute;
+                top: 50%;
+                width: 5%;
+                padding: 30px 5%;
+                margin-top: -22px;
+                color: white;
+                font-weight: bold;
+                font-size: 40px;
+                transition: 0.6s ease;
+                border-radius: 0 3px 3px 0;
+                user-select: none;
+            }
+
+            .next {
+                
+                right: 0;
+                border-radius: 3px 0 0 3px;
+                
+            }
+
+            .text {
+                position: absolute;
+                
+                top: 18%;
+                left: 8%;
+                width: 80%;
+                height: auto;
+                padding: 5px;
+                
+                font-size: 30px;
+                align-items: center;
+                text-align: center;
+                
+            }
+
+            .grid-row {
+                margin-top: 12%;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                grid-gap: 50px;
+                grid-row-gap: 5%;
+                align-items: center;
+                justify-content: center;
+                place-items: center;
+            }
+
+            .dot {
+                display: inline-block;
+                width: 30px;
+                height: 30px;
+                line-height: 25px;
+                border-radius: 50%;
+                border: 1px solid whitesmoke;
+                background-color: #6f6f6f;
+                text-align: center;
+                margin: 0 5px;
+                cursor: pointer;
+                transition: background-color 0.6s ease;
+                position: relative;
+                z-index: 1;
+            }
+
+            .answer {
+                padding: 26px;
+                font-size: 25px;
+                font-weight: 100;
+                color: rgba(93, 92, 92, 0.801);
+                width: 300px;
+                border: 3px solid rgba(93, 92, 92, 0.801);
+                border-radius: 8px;
+                background-color: rgba(255, 255, 255, 0.782);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+        } */
+        .container {
+            text-align: center;
+            place-items: center;
+            position: relative;
+            margin-top: 18%;
+        }
+
+        .pulse-button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            position: relative;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+            }
+
+            70% {
+                transform: scale(1.2);
+                box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+            }
+        }
+
+        .pulse-button.pulse-active {
+            animation: pulse-active 1.5s infinite;
+            background-color: red;
+        }
+
+        @keyframes pulse-active {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+            }
+
+            70% {
+                transform: scale(1.2);
+                box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+            }
+        }
+
+        .pulse-button:hover {
+            animation: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="component">
+        <div class="slideshow-container">
+
+            <div class="mySlides fade">
+                <div class="numbertext">1 / 11</div>
+                <div class="text">Question 1: shall we talk about?</div>
+                <!-- <form action="/answer" method="POST"> -->
+                    <div class="container">
+                        <button id="microphoneButton" class="pulse-button"></button>
+                    </div>
+                    <audio id="audio" controls style="display:none;"></audio>
+                <!-- </form> -->
+            </div>
+
+            <div class="mySlides fade">
+                <div class="numbertext">2 / 11</div>
+                <div class="text">Question 2: Why do we use it?</div>
+                <!-- <form action="/answer" method="POST"> -->
+                    <div class="container">
+                        <button id="microphoneButton" class="pulse-button"></button>
+                    </div>
+                    <audio id="audio" controls style="display:none;"></audio>
+                <!-- </form> -->
+            </div>
+
+            <div class="mySlides fade">
+                <div class="numbertext">3 / 11</div>
+                <div class="text">Question 3: Where does it come from?</div>
+                <!-- <form action="/answer" method="POST"> -->
+                    <div class="container">
+                        <button id="microphoneButton" class="pulse-button"></button>
+                    </div>
+                    <audio id="audio" controls style="display:none;"></audio>
+                <!-- </form> -->
+            </div>
+
+            <div class="mySlides fade">
+                <div class="numbertext">4 / 11</div>
+                <div class="text">Question 4: shall we talk about?</div>
+                <!-- <form action="/answer" method="POST"> -->
+                    <div class="container">
+                        <button id="microphoneButton" class="pulse-button"></button>
+                    </div>
+                    <audio id="audio" controls style="display:none;"></audio>
+                <!-- </form> -->
+            </div>
+
+            <div class="mySlides fade">
+                <div class="numbertext">5 / 11</div>
+                <div class="text">Question 5: Why do we use it?</div>
+                <!-- <form action="/answer" method="POST"> -->
+                    <div class="container">
+                        <button id="microphoneButton" class="pulse-button"></button>
+                    </div>
+                    <audio id="audio" controls style="display:none;"></audio>
+                <!-- </form> -->
+            </div>
+
+            <div class="mySlides fade">
+                <div class="numbertext">6 / 11</div>
+                <div class="text">Question 6: Where does it come from?</div>
+                <!-- <form action="/answer" method="POST"> -->
+                    <div class="container">
+                        <button id="microphoneButton" class="pulse-button"></button>
+                    </div>
+                    <audio id="audio" controls style="display:none;"></audio>
+                <!-- </form> -->
+            </div>
+            <div class="mySlides fade">
+                <div class="numbertext">7 / 11</div>
+                <div class="text">Question 7: shall we talk about?</div>
+                <!-- <form action="/answer" method="POST"> -->
+                    <div class="container">
+                        <button id="microphoneButton" class="pulse-button"></button>
+                    </div>
+                    <audio id="audio" controls style="display:none;"></audio>
+                <!-- </form> -->
+            </div>
+
+            <div class="mySlides fade">
+                <div class="numbertext">8 / 11</div>
+                <div class="text">Question 8: Why do we use it?</div>
+                <!-- <form action="/answer" method="POST"> -->
+                    <div class="container">
+                        <button id="microphoneButton" class="pulse-button"></button>
+                    </div>
+                    <audio id="audio" controls style="display:none;"></audio>
+                <!-- </form> -->
+            </div>
+
+            <div class="mySlides fade">
+                <div class="numbertext">9 / 11</div>
+                <div class="text">Question 9: Where does it come from?</div>
+                <!-- <form action="/answer" method="POST"> -->
+                    <div class="container">
+                        <button id="microphoneButton" class="pulse-button"></button>
+                    </div>
+                    <audio id="audio" controls style="display:none;"></audio>
+                <!-- </form> -->
+            </div>
+            <div class="mySlides fade">
+                <div class="numbertext">10 / 11</div>
+                <div class="text">Question 10: shall we talk about?</div>
+                <!-- <form action="/answer" method="POST"> -->
+                    <div class="container">
+                        <button id="microphoneButton" class="pulse-button"></button>
+                    </div>
+                    <audio id="audio" controls style="display:none;"></audio>
+                <!-- </form> -->
+            </div>
+
+            <div class="mySlides fade">
+                <div class="numbertext">11 / 11</div>
+                <div class="text">Question 11: Why do we use it?</div>
+                <!-- <form action="/answer" method="POST"> -->
+                    <div class="container">
+                        <button id="microphoneButton" class="pulse-button"></button>
+                    </div>
+                    <audio id="audio" controls style="display:none;"></audio>
+                <!-- </form> -->
+            </div>
+
+            <a class="prev" onclick="plusSlides(-1)">❮</a>
+            <a class="next" onclick="plusSlides(1)">❯</a>
+
+        </div>
+
+        <br>
+
+        <div style="text-align:center">
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+            <span class="dot" onclick="currentSlide(4)"></span>
+            <span class="dot" onclick="currentSlide(5)"></span>
+            <span class="dot" onclick="currentSlide(6)"></span>
+            <span class="dot" onclick="currentSlide(7)"></span>
+            <span class="dot" onclick="currentSlide(8)"></span>
+            <span class="dot" onclick="currentSlide(9)"></span>
+            <span class="dot" onclick="currentSlide(10)"></span>
+            <span class="dot" onclick="currentSlide(11)"></span>
+        </div>
+    </div>
+    <!-- </div> -->
+
+    <script>
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            let dots = document.getElementsByClassName("dot");
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].className += " active";
+        }
+
+        let isRecording = false;
+        let mediaRecorder;
+        let recordedChunks = [];
+
+        const microphoneButton = document.getElementById('microphoneButton');
+
+        // เมื่อคลิกที่ปุ่มไมค์
+        microphoneButton.addEventListener('click', function () {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        });
+
+        function startRecording() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, autoGainControl: false, noiseSuppression: false } })
+                    .then(function (stream) {
+                        mediaRecorder = new MediaRecorder(stream);
+                        mediaRecorder.ondataavailable = function (e) {
+                            recordedChunks.push(e.data);
+                        };
+                        mediaRecorder.onstop = function () {
+                            const blob = new Blob(recordedChunks, { type: 'audio/wav' });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'recorded.wav';
+                            document.body.appendChild(a);
+                            a.click();
+                            recordedChunks = [];
+                        };
+                        mediaRecorder.start();
+                        isRecording = true;
+                        microphoneButton.classList.add('pulse-active');
+                    })
+                    .catch(function (err) {
+                        console.error('ไม่สามารถเปิดไมค์ได้: ', err);
+                    });
+            } else {
+                console.error('ไม่สนับสนุนการเชื่อมต่อไมค์ในเบราว์เซอร์นี้');
+            }
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+            isRecording = false;
+            microphoneButton.classList.remove('pulse-active');
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+
+
+</body>
+
+</html>

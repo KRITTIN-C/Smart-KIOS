@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microphone Button</title>
+<style>
+    .container {
+    text-align: center;
+}
+
+.pulse-button {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+    }
+    70% {
+        transform: scale(1.2);
+        box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+    }
+}
+
+.pulse-button.pulse-active {
+    animation: pulse-active 1.5s infinite;
+    background-color: red;
+}
+
+@keyframes pulse-active {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+    }
+    70% {
+        transform: scale(1.2);
+        box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+    }
+}
+
+.pulse-button:hover {
+    animation: none;
+}
+
+</style>
+</head>
+<body>
+<div class="container">
+    <button id="microphoneButton" class="pulse-button"></button>
+</div>
+<audio id="audio" controls style="display:none;"></audio>
+<script src="script.js"></script>
+<script>
+let isRecording = false;
+let mediaRecorder;
+let recordedChunks = [];
+
+const microphoneButton = document.getElementById('microphoneButton');
+
+// เมื่อคลิกที่ปุ่มไมค์
+microphoneButton.addEventListener('click', function() {
+    if (!isRecording) {
+        startRecording();
+    } else {
+        stopRecording();
+    }
+});
+
+function startRecording() {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, autoGainControl: false, noiseSuppression: false } })
+            .then(function(stream) {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = function(e) {
+                    recordedChunks.push(e.data);
+                };
+                mediaRecorder.onstop = function() {
+                    const blob = new Blob(recordedChunks, { type: 'audio/wav' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'recorded.wav';
+                    document.body.appendChild(a);
+                    a.click();
+                    recordedChunks = [];
+                };
+                mediaRecorder.start();
+                isRecording = true;
+                microphoneButton.classList.add('pulse-active');
+            })
+            .catch(function(err) {
+                console.error('ไม่สามารถเปิดไมค์ได้: ', err);
+            });
+    } else {
+        console.error('ไม่สนับสนุนการเชื่อมต่อไมค์ในเบราว์เซอร์นี้');
+    }
+}
+
+function stopRecording() {
+    mediaRecorder.stop();
+    isRecording = false;
+    microphoneButton.classList.remove('pulse-active');
+}
+
+</script>
+</body>
+</html>
