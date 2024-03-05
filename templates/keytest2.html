@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Keyboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #inputField {
+            border: 1px solid #ccc;
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 20px;
+            width: 300px;
+        }
+
+        #keyboard-container {
+            display: none;
+        }
+
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+        }
+
+        .keyboard-key {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #000;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .keyboard-key:hover {
+            background-color: #ddd;
+        }
+
+        .uppercase {
+            display: none;
+            /* ซ่อนตัวพิมพ์ใหญ่ */
+        }
+
+        #keyboard-container.show-uppercase .uppercase {
+            display: inline-block;
+            /* แสดงตัวพิมพ์ใหญ่เมื่อมี class "show-uppercase" */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- โค้ดของ component ว่างเปล่า -->
+    <div id="inputField" class="input-field" contenteditable="true"></div>
+    <!-- ส่วนของ keyboard -->
+    <div id="keyboard-container">
+        <div class="keyboard-row">
+            <div class="keyboard-key" data-normal="q">q</div>
+            <div class="keyboard-key" data-normal="w">w</div>
+            <div class="keyboard-key" data-normal="e">e</div>
+            <div class="keyboard-key" data-normal="r">r</div>
+            <div class="keyboard-key" data-normal="t">t</div>
+            <div class="keyboard-key" data-normal="y">y</div>
+            <div class="keyboard-key" data-normal="u">u</div>
+            <div class="keyboard-key" data-normal="i">i</div>
+            <div class="keyboard-key" data-normal="o">o</div>
+            <div class="keyboard-key" data-normal="p">p</div>
+        </div>
+        <div class="keyboard-row">
+            <div class="keyboard-key" data-normal="a">a</div>
+            <div class="keyboard-key" data-normal="s">s</div>
+            <div class="keyboard-key" data-normal="d">d</div>
+            <div class="keyboard-key" data-normal="f">f</div>
+            <div class="keyboard-key" data-normal="g">g</div>
+            <div class="keyboard-key" data-normal="h">h</div>
+            <div class="keyboard-key" data-normal="j">j</div>
+            <div class="keyboard-key" data-normal="k">k</div>
+            <div class="keyboard-key" data-normal="l">l</div>
+        </div>
+        <div class="keyboard-row">
+            <div class="keyboard-key uppercase" data-normal="q">Q</div>
+            <div class="keyboard-key uppercase" data-normal="w">W</div>
+            <div class="keyboard-key uppercase" data-normal="e">E</div>
+            <div class="keyboard-key uppercase" data-normal="r">R</div>
+            <div class="keyboard-key uppercase" data-normal="t">T</div>
+            <div class="keyboard-key uppercase" data-normal="y">Y</div>
+            <div class="keyboard-key uppercase" data-normal="u">U</div>
+            <div class="keyboard-key uppercase" data-normal="i">I</div>
+            <div class="keyboard-key uppercase" data-normal="o">O</div>
+            <div class="keyboard-key uppercase" data-normal="p">P</div>
+        </div>
+        <!-- ซ้ำสำหรับแถวอื่น ๆ ของ keyboard -->
+        <div class="keyboard-row">
+            <div class="keyboard-key uppercase" data-normal="a">A</div>
+            <div class="keyboard-key uppercase" data-normal="s">S</div>
+            <div class="keyboard-key uppercase" data-normal="d">D</div>
+            <div class="keyboard-key uppercase" data-normal="f">F</div>
+            <div class="keyboard-key uppercase" data-normal="g">G</div>
+            <div class="keyboard-key uppercase" data-normal="h">H</div>
+            <div class="keyboard-key uppercase" data-normal="j">J</div>
+            <div class="keyboard-key uppercase" data-normal="k">K</div>
+            <div class="keyboard-key uppercase" data-normal="l">L</div>
+        </div>
+        <!-- ซ้ำสำหรับแถวอื่น ๆ ของ keyboard -->
+        <div class="keyboard-row">
+            <div class="keyboard-key shift">Shift</div>
+            <div class="keyboard-key" data-normal="z">z</div>
+            <div class="keyboard-key" data-normal="x">x</div>
+            <div class="keyboard-key" data-normal="c">c</div>
+            <div class="keyboard-key" data-normal="v">v</div>
+            <div class="keyboard-key" data-normal="b">b</div>
+            <div class="keyboard-key" data-normal="n">n</div>
+            <div class="keyboard-key" data-normal="m">m</div>
+            <div class="keyboard-key backspace">Backspace</div>
+        </div>
+        <!-- ซ้ำสำหรับแถวอื่น ๆ ของ keyboard -->
+        <div class="keyboard-row">
+            <div class="keyboard-key enter">Enter</div>
+        </div>
+    </div>
+
+
+
+    <script>
+        var inputField = document.getElementById('inputField');
+        var keyboardContainer = document.getElementById('keyboard-container');
+        var isUpperCase = false;
+
+        inputField.addEventListener('click', function () {
+            keyboardContainer.style.display = 'block';
+        });
+
+        document.querySelectorAll('.keyboard-key').forEach(function (key) {
+            key.addEventListener('click', function () {
+                var char = this.textContent;
+                
+                if (char === 'Backspace') {
+                    var currentText = inputField.textContent || inputField.innerText;
+                    inputField.innerText = currentText.slice(0, -1);
+                } else if (char === 'Enter') {
+                    // ทำอะไรสักอย่างเมื่อกด Enter
+                    // ยกเลิกการปิด keyboard
+                    keyboardContainer.style.display = 'none';
+                }
+                else if (char === 'Shift') {
+                    var currentText = inputField.textContent || inputField.innerText;
+                    inputField.innerText = currentText + '';
+                }else {
+                    var currentText = inputField.textContent || inputField.innerText;
+                    inputField.innerText = currentText + char;
+                }
+            });
+        });
+
+
+        document.querySelectorAll('.keyboard-key.uppercase').forEach(function (key) {
+            key.addEventListener('click', function () {
+                var char = this.textContent;
+                var currentText = inputField.textContent || inputField.innerText;
+                inputField.innerText = currentText + char;
+            });
+        });
+
+        document.querySelector('.keyboard-key.shift').addEventListener('click', function (event) {
+            isUpperCase = !isUpperCase;
+            if (isUpperCase) {
+                document.querySelectorAll('.keyboard-key:not(.shift)').forEach(function (key) {
+                    var normalChar = key.getAttribute('data-normal');
+                    key.textContent = normalChar.toUpperCase();
+                });
+            } else {
+                document.querySelectorAll('.keyboard-key:not(.shift)').forEach(function (key) {
+                    var normalChar = key.getAttribute('data-normal');
+                    key.textContent = normalChar.toLowerCase();
+                });
+            }
+            event.preventDefault();
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if ((event.code === 'Shift') && document.activeElement !== inputField) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            if ((event.code === 'Shift') && document.activeElement === inputField) {
+                event.preventDefault();
+            }
+        });
+
+        // document.querySelector('.keyboard-key.space').addEventListener('click', function (event) {
+        //     if (document.activeElement === inputField) {
+        //         event.preventDefault();
+        //     }
+        // });
+
+
+
+        // แก้โค้ดเพื่อลบข้อความ "Shift" และ "Space" ออกจากปุ่ม
+        // document.querySelector('.keyboard-key.shift').textContent = '';
+        // document.querySelector('.keyboard-key.space').textContent = '';
+
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Keyboard</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    #inputField {
+        border: 1px solid #ccc;
+        background-color: #fff;
+        padding: 10px;
+        margin-bottom: 20px;
+        width: 300px;
+    }
+    #keyboard-container {
+        display: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+        position: absolute;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .keyboard-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+    .keyboard-key {
+        display: inline-block;
+        margin: 5px;
+        padding: 10px;
+        cursor: pointer;
+        background-color: #ccc;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+    .keyboard-key:hover {
+        background-color: #bfbfbf;
+    }
+</style>
+</head>
+<body>
+
+<div id="inputField" contenteditable="true"></div>
+
+<div id="keyboard-container">
+    <div class="keyboard-row">
+        <div class="keyboard-key" data-normal="1">1</div>
+        <div class="keyboard-key" data-normal="2">2</div>
+        <div class="keyboard-key" data-normal="3">3</div>
+        <div class="keyboard-key" data-normal="4">4</div>
+        <div class="keyboard-key" data-normal="5">5</div>
+        <div class="keyboard-key" data-normal="6">6</div>
+        <div class="keyboard-key" data-normal="7">7</div>
+        <div class="keyboard-key" data-normal="8">8</div>
+        <div class="keyboard-key" data-normal="9">9</div>
+        <div class="keyboard-key" data-normal="0">0</div>
+    </div>
+    <div class="keyboard-row">
+        <div class="keyboard-key" data-normal="q">q</div>
+        <div class="keyboard-key" data-normal="w">w</div>
+        <div class="keyboard-key" data-normal="e">e</div>
+        <div class="keyboard-key" data-normal="r">r</div>
+        <div class="keyboard-key" data-normal="t">t</div>
+        <div class="keyboard-key" data-normal="y">y</div>
+        <div class="keyboard-key" data-normal="u">u</div>
+        <div class="keyboard-key" data-normal="i">i</div>
+        <div class="keyboard-key" data-normal="o">o</div>
+        <div class="keyboard-key" data-normal="p">p</div>
+    </div>
+    <div class="keyboard-row">
+        <div class="keyboard-key" data-normal="a">a</div>
+        <div class="keyboard-key" data-normal="s">s</div>
+        <div class="keyboard-key" data-normal="d">d</div>
+        <div class="keyboard-key" data-normal="f">f</div>
+        <div class="keyboard-key" data-normal="g">g</div>
+        <div class="keyboard-key" data-normal="h">h</div>
+        <div class="keyboard-key" data-normal="j">j</div>
+        <div class="keyboard-key" data-normal="k">k</div>
+        <div class="keyboard-key" data-normal="l">l</div>
+    </div>
+    <div class="keyboard-row">
+        <div class="keyboard-key" data-normal="z">z</div>
+        <div class="keyboard-key" data-normal="x">x</div>
+        <div class="keyboard-key" data-normal="c">c</div>
+        <div class="keyboard-key" data-normal="v">v</div>
+        <div class="keyboard-key" data-normal="b">b</div>
+        <div class="keyboard-key" data-normal="n">n</div>
+        <div class="keyboard-key" data-normal="m">m</div>
+        <div class="keyboard-key" id="shiftButton" style="flex-grow: 4; text-align: center;">Shift</div> <!-- Shift button -->
+        <div class="keyboard-key" id="enterButton" style="flex-grow: 2; text-align: center;">Enter</div> <!-- Enter button -->
+    </div>
+</div>
+
+<script>
+var inputField = document.getElementById('inputField');
+var keyboardContainer = document.getElementById('keyboard-container');
+var isShifted = false;
+
+function toggleKeyboard() {
+    if (keyboardContainer.style.display === 'block') {
+        keyboardContainer.style.display = 'none';
+    } else {
+        keyboardContainer.style.display = 'block';
+    }
+}
+
+inputField.addEventListener('click', function() {
+    toggleKeyboard();
+});
+
+document.querySelectorAll('.keyboard-key').forEach(function(key) {
+    key.addEventListener('click', function() {
+        var char = this.textContent;
+        if (char === 'Shift') {
+            isShifted = !isShifted;
+            if (isShifted) {
+                // Change letters to uppercase
+                document.querySelectorAll('.keyboard-key').forEach(function(button) {
+                    if (button.textContent !== 'Shift' && button.textContent !== 'Enter') {
+                        var normalChar = button.getAttribute('data-normal');
+                        button.textContent = normalChar.toUpperCase();
+                    }
+                });
+            } else {
+                // Change letters to lowercase
+                document.querySelectorAll('.keyboard-key').forEach(function(button) {
+                    if (button.textContent !== 'Shift' && button.textContent !== 'Enter') {
+                        var normalChar = button.getAttribute('data-normal');
+                        button.textContent = normalChar.toLowerCase();
+                    }
+                });
+            }
+        } else if (char === 'Enter') {
+            toggleKeyboard();
+        } else {
+            var currentText = inputField.textContent || inputField.innerText;
+            inputField.innerText = currentText + char;
+        }
+    });
+});
+
+// Set normal characters for each button
+document.querySelectorAll('.keyboard-key').forEach(function(button) {
+    var normalChar = button.textContent;
+    button.setAttribute('data-normal', normalChar);
+});
+
+// Handle spacebar press
+document.addEventListener('keydown', function(event) {
+    if (event.code === 'Space') {
+        // Check if the keyboard is not displayed
+        if (keyboardContainer.style.display !== 'block') {
+            toggleKeyboard();
+        }
+    }
+});
+
+</script>
+
+</body>
+</html>
