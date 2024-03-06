@@ -198,7 +198,13 @@
             animation-direction: alternate;
             /* กำหนดทิศทางการเล่น animation เป็น alternate */
         }
-
+        .img-sos {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            margin-left: 92%;
+            margin-top: 15%;
+        }
         @keyframes fade {
             from {
                 opacity: .4
@@ -222,7 +228,6 @@
 
         /* On smaller screens, decrease text size */
         @media only screen and (max-width: 480px) {
-
             .prev,
             .next {
                 cursor: pointer;
@@ -670,7 +675,7 @@
             text-align: center;
             place-items: center;
             position: relative;
-            margin-top: 18%;
+            /* margin-top: 18%; */
         }
 
         .pulse-button {
@@ -683,6 +688,8 @@
             font-size: 16px;
             cursor: pointer;
             position: relative;
+            margin-top: 45%;
+            /* margin-top: 15%;                                         */
             animation: pulse 1.5s infinite;
         }
 
@@ -854,7 +861,9 @@
                 <audio id="audio" controls style="display:none;"></audio>
                 <!-- </form> -->
             </div>
-
+            <a href="total-page.html">
+                <img src="pic/sos.png" alt="SOS" style="float: left;" class="img-sos">
+            </a>
             <a class="prev" onclick="plusSlides(-1)">❮</a>
             <a class="next" onclick="plusSlides(1)">❯</a>
 
@@ -875,7 +884,8 @@
             <span class="dot" onclick="currentSlide(10)"></span>
             <span class="dot" onclick="currentSlide(11)"></span>
         </div>
-    </div>
+
+      </div>
     <!-- </div> -->
 
     <script>
